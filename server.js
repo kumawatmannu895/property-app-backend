@@ -1,5 +1,16 @@
 require("dotenv").config(); // 🔥 सबसे पहले
 
+// 🔴 ERROR HANDLER
+process.on("uncaughtException", (err) => {
+  console.log("UNCAUGHT EXCEPTION:");
+  console.log(err);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.log("UNHANDLED REJECTION:");
+  console.log(err);
+});
+
 console.log("MONGO_URI:", process.env.MONGO_URI); // 🔍 DEBUG
 
 const express = require("express");
