@@ -17,7 +17,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List properties = [];
 
-  final String baseUrl = "http://192.168.94.135:3000";
+  // ✅ RENDER BASE URL
+  final String baseUrl =
+      "https://property-app-backend-2vcd.onrender.com";
 
   @override
   void initState() {
@@ -71,8 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (res.statusCode == 200) {
         fetchProperties();
+
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Deleted successfully 🗑️")),
+          const SnackBar(
+            content: Text("Deleted successfully 🗑️"),
+          ),
         );
       } else if (res.statusCode == 401) {
         logout();
@@ -91,7 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
     );
   }
 
@@ -109,17 +116,24 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       body: properties.isEmpty
-          ? const Center(child: Text("No Data Found ❌"))
+          ? const Center(
+              child: Text("No Data Found ❌"),
+            )
           : ListView.builder(
               itemCount: properties.length,
               itemBuilder: (context, index) {
                 final item = properties[index];
 
                 String imageUrl = "";
-                if (item["images"] != null && item["images"].isNotEmpty) {
+
+                if (item["images"] != null &&
+                    item["images"].isNotEmpty) {
                   imageUrl = item["images"][0]
                       .toString()
-                      .replaceAll("localhost", "192.168.94.135");
+                      .replaceAll(
+                        "http://localhost:3000",
+                        "https://property-app-backend-2vcd.onrender.com",
+                      );
                 }
 
                 return Card(
@@ -131,12 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: 60,
                             height: 60,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.broken_image),
+                            errorBuilder:
+                                (context, error, stackTrace) =>
+                                    const Icon(Icons.broken_image),
                           )
                         : const Icon(Icons.home),
 
                     title: Text(item["title"] ?? ""),
+
                     subtitle: Text(
                       "₹ ${item["price"]} - ${item["location"]}",
                     ),
@@ -146,22 +162,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         // ✏️ EDIT
                         IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.blue),
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.blue,
+                          ),
                           onPressed: () async {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    EditPropertyScreen(property: item),
+                                    EditPropertyScreen(
+                                  property: item,
+                                ),
                               ),
                             );
+
                             fetchProperties();
                           },
                         ),
 
                         // ❌ DELETE
                         IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
                           onPressed: () {
                             deleteProperty(item["_id"]);
                           },
@@ -178,9 +203,11 @@ class _HomeScreenState extends State<HomeScreen> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const AddPropertyScreen(),
+              builder: (context) =>
+                  const AddPropertyScreen(),
             ),
           );
+
           fetchProperties();
         },
         child: const Icon(Icons.add),
